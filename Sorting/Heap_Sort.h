@@ -10,7 +10,7 @@ inline int parent(int i) { return i/2; }
 inline int left(int i) { return 2*i+1; }
 inline int right(int i) { return 2*i+2; }
 
-void heapSort(std::vector<int>& v, Order order);
+void heapSort(std::vector<int>& v, Order order, std::unique_ptr<Result>& r);
 void maxHeapify(std::vector<int>& v, int i, int heapSize);
 void buildMaxHeap(std::vector<int>& v);
 void minHeapify(std::vector<int>& v, int i, int heapSize);

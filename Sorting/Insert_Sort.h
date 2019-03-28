@@ -6,6 +6,6 @@
 
 using namespace toolBox;
 
-void insertSort(std::vector<int>& v, Order order);
+void insertSort(std::vector<int>& v, Order order, std::unique_ptr<Result>& r);
 
 #endif
