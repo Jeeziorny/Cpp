@@ -7,10 +7,12 @@
 
 typedef int (*partitionFunction)(std::vector<int>&, int, int);
 
-void mQuickSort(std::vector<int>& v, int p, int r, toolBox::Order ord, std::unique_ptr<Result>& q);
-void mQuickSortProcedure(std::vector<int>& v, int p, int r, partitionFunction pFunc);
-int mPartAsc(std::vector<int>& v, int p, int r);
-int mPartDesc(std::vector<int>& v, int p, int r);
-int median(int a, int b, int c);
+void mQuickSort(std::vector<int>& v, int p, int r, toolBox::Order ord,
+                 std::unique_ptr<Result>& q);
+void mQuickAsc(std::vector<int>& v, int p, int r);
+int partAscQ(std::vector<int>& v, int p, int r);
+void mQuickDesc(std::vector<int>& v, int p, int r);
+int partDescQ(std::vector<int>& v, int p, int r);
+int& median(int& a, int& b, int& c);
 
 #endif

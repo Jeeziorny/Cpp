@@ -6,6 +6,7 @@
 #include "Insert_Sort.h"
 #include "Heap_Sort.h"
 #include "Quick_Sort.h"
+#include "MQuick_Sort.h"
 #include "myTools.h"
 
 bool compare(const char *str1, const char *str2);
@@ -39,7 +40,16 @@ int main(int argc, char * argv[])
             log();
         }
     }
-    userService(algorithm, ord);
+    userService(algorithm, ord);/*
+    std::unique_ptr<toolBox::Result> res =
+        std::unique_ptr<toolBox::Result>(new toolBox::Result);
+    std::vector<int> v;
+    for (int i = 0; i < 40; i++) {
+        fillMe(v, 10);
+        mQuickSort(v, 0, v.size(), toolBox::ASC, res);
+        printArr(v);
+        v.clear();
+    }*/
     return 0;
 }
 
@@ -55,8 +65,10 @@ void userService(std::string type, toolBox::Order ord)
         insertSort(v, ord, res);
     } else if (type == std::string("heap")) {
         heapSort(v, ord, res);
+    } else if (type == std::string("mquick")) {
+        mQuickSort(v, 0, v.size() - 1, ord, res);
     } else if (type == std::string("quick")) {
-        quickSort(v, 0, v.size()-1, ord, res);
+        quickSort(v, 0, v.size() - 1, ord, res);
     } else {
         log();
         exit(0);
@@ -137,7 +149,10 @@ void launchStatMode(toolBox::Stat& a)
             insertSort(vInsert, toolBox::ASC, rInsert);
             selectSort(vSelect, toolBox::ASC, rSelect);
             quickSort(vQuick, 0, n-1, toolBox::ASC, rQuick);
+            mQuickSort(vMQuick, 0, n-1, toolBox::ASC, rMQuick);
             std::cout << "n = " << n << " i = " << i << std::endl;
+            myFile << n << ";" << rMQuick->type << ";" << rMQuick->comparisons << ";"
+             << rMQuick->swaps << ";" << rMQuick->time << std::endl;
             myFile << n << ";" << rHeap->type << ";" << rHeap->comparisons << ";"
              << rHeap->swaps << ";" << rHeap->time << std::endl;
             myFile << n << ";" << rQuick->type << ";" << rQuick->comparisons << ";"
@@ -151,6 +166,7 @@ void launchStatMode(toolBox::Stat& a)
             vSelect.clear();
             vQuick.clear();
             vHeap.clear();
+            vMQuick.clear();
         }
     }
     myFile.close();

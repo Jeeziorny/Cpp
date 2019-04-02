@@ -8,24 +8,27 @@ void selectSort(std::vector<int>& v, Order order, std::unique_ptr<Result>& r)
     int j, min_idx, max_idx;
     int temp;
     clock_t t = clock();
-    //std::cerr << "SEL_SORT>sort Order == ascending?\n";
+    std::cerr << "SEL_SORT>sort Order == ascending?\n";
     sel_sort_comparison_counter++;
     int SIZE = v.size();
     if (order == toolBox::DESC) {
         for (int i = 0; i < SIZE; i++) {
             max_idx = i;
+            std::cerr << "SEL_SORT> searching max\n";
             for (j = i+1; j < SIZE; j++) {
                 if (v[j] > v[max_idx])
                     max_idx = j;
                 sel_sort_comparison_counter += 2;
             }
+            std::cerr << "swap" << std::endl;
             temp = v[max_idx];
             v[max_idx] = v[i];
             v[i] = temp;
-            //std::cerr << "SEL_SORT>Swap: " << *it << " <-> " << v[indexOfMax] << std::endl;
+            std::cerr << "SEL_SORT>Swap: " << temp << " <-> " << v[max_idx] << std::endl;
             sel_sort_key_swap_counter++;
-            //std::cerr << "SEL_SORT>Checking if " << *it << " is last element\n";
+            std::cerr << "SEL_SORT>Checking if " << temp << " is last element\n";
             sel_sort_comparison_counter++;
+            printArr(v);
         }
     } else {
         for (int i = 0; i < SIZE; i++) {
@@ -38,10 +41,11 @@ void selectSort(std::vector<int>& v, Order order, std::unique_ptr<Result>& r)
             temp = v[min_idx];
             v[min_idx] = v[i];
             v[i] = temp;
-            //std::cerr << "SEL_SORT>Swap: " << *it << " <-> " << v[indexOfMin] << std::endl;
+            std::cerr << "SEL_SORT>Swap: " << temp << " <-> " << v[min_idx] << std::endl;
             sel_sort_key_swap_counter++;
-            //std::cerr << "SEL_SORT>Checking if " << *it << " is last element\n";
+            std::cerr << "SEL_SORT>Checking if " << temp << " is last element\n";
             sel_sort_comparison_counter++;
+            printArr(v);
         }
     }
     t = clock() - t;
