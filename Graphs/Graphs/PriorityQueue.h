@@ -37,7 +37,7 @@ public:
 	
 	void insert(int x, T p);	//insert
 	Node<T>& top();				//maximum
-	Node<T>& pop();				//extract-max
+	Node<T> pop();				//extract-max
 	void priority(int x, T p);	
 	void heapDecreaseKey(int i, T p);
 
@@ -111,7 +111,7 @@ Node<T>& PriorityQueue<T>::top()
 }
 
 template <class T>
-Node<T>& PriorityQueue<T>::pop()
+Node<T> PriorityQueue<T>::pop()
 {
 	
 	if (heapsize < 1)
