@@ -1,19 +1,103 @@
 #include "pch.h"
 #include "Graph.h"
 
-
-Graph::Graph(int n)
+void Graph::dfs_visit(Vertex& v)
 {
-	for (int i = 0; i < n; i++)
+	v.setColor(Vertex::GREY);
+	v.setD(++time);
+	bool gotAdj = false;
+	for (auto& u : v.getAllAdj())
+	{
+		if (u.first->getColor() == Vertex::WHITE)
+		{
+			gotAdj = true;
+			u.first->setLast(v);
+			last_dfs_visit = u.first;
+			dfs_visit(*u.first);
+		}
+	}
+	v.setColor(Vertex::BLACK);
+	v.setF(++time);
+	if (!gotAdj)
+		last_dfs_visit = &v;
+}
+
+void Graph::transpoze()
+{
+	vector<tuple<int, int, double>> nEdges =
+		vector<tuple<int, int, double>>();
+	for (Vertex& v : vertices)
+	{
+		v.clearAdj();
+		v.resetLast();
+	}
+	last_dfs_visit = nullptr;
+	int temp;
+	for (auto p : Edges)
+	{
+		nEdges.push_back(tuple<int, int, double>{
+			get<1>(p), get<0>(p), get<2>(p)
+		});
+		vertices.at(get<1>(p))
+			.addAdj(&vertices[get<0>(p)], get<2>(p));
+	}
+	Edges = nEdges;
+	last_dfs_visit = nullptr;
+}
+
+void Graph::dfs()
+{
+	Vertex* temp = nullptr;
+	vector<Vertex *> ptrs = vector<Vertex *>();
+	for (auto& v : vertices)
+	{
+		v.setColor(Vertex::WHITE);
+		ptrs.push_back(&v);
+	}
+	time = 0;
+	sort(ptrs.begin(), ptrs.end(), compareByF);
+	for (auto ptr : ptrs)
+	{
+		if (ptr->getColor() == Vertex::WHITE)
+		{
+			dfs_visit(*ptr);
+			temp = last_dfs_visit;
+			while (temp != nullptr)
+			{
+				std::cout << temp->getId() << ", ";
+				temp = temp->getLast();
+			}
+			std::cout << std::endl;
+		}
+	}
+}
+/*
+	for (auto& v : vertices)
+	{
+		if (v.getColor() == Vertex::WHITE)
+		{
+			dfs_visit(v);
+			temp = last_dfs_visit;
+			while (temp != nullptr)
+			{
+				std::cout << temp->getId() << ", ";
+				temp = temp->getLast();
+			}
+			std::cout << std::endl;
+		}
+	}
+*/
+//}
+
+Graph::Graph(int n)											
+{
+	for (int i = 0; i <= n; i++)
 		vertices.push_back(Vertex(i));
 }
-
-
-Graph::~Graph()
+	
+Graph::~Graph()											
 {
 }
-
-
 
 void Graph::addEdge(int from, int to, double w)
 {
@@ -24,15 +108,9 @@ void Graph::addEdge(int from, int to, double w)
 	{
 		std::cerr << "There is no " << from << " or " << to << std::endl;
 	}
-
+	Edges.push_back(tuple<int, int, double>{from, to, w});
 	if (w > maxWeight)
 		maxWeight = w;
-}
-
-void Graph::addUndirectedEdge(int u, int v, double w)
-{
-	addEdge(u, v, w);
-	addEdge(v, u, w);
 }
 
 void Graph::init_single_source(int id)
@@ -44,6 +122,7 @@ void Graph::init_single_source(int id)
 	}
 	try {
 		vertices.at(id).setD(0);
+		vertices.at(id).resetLast();
 	}
 	catch (std::out_of_range e)
 	{
@@ -57,19 +136,21 @@ void Graph::showPaths()
 	{
 		std::cout << "Id = " << v.getId() << ", weight: " << v.getD() << std::endl;
 	}
-}
-
-void Graph::relax2(int u, int v, double w)
-{
-	//check is done from vertex u;
-	if (vertices.at(v).getD() > vertices.at(u).getD() + w)
+	Vertex * curr;
+	for (auto v : vertices)
 	{
-		vertices.at(v).setD(vertices.at(u).getD() + w);
-		vertices.at(v).setLast(vertices.at(u));
+		std::cerr << "\nPath to: " << v.getId() << "\n";
+		curr = &v;
+		while (curr != nullptr)
+		{
+			std::cerr << curr->getId() << " ";
+			curr = curr->getLast();
+		}
 	}
+
 }
 
-void Graph::relax(Vertex &u, Vertex &v, double w)
+void Graph::dijkstraRelax(Vertex &u, Vertex &v, double w)
 {
 	if (v.getD() > u.getD() + w)
 	{
@@ -77,6 +158,7 @@ void Graph::relax(Vertex &u, Vertex &v, double w)
 		v.setLast(u);
 	}
 }
+
 void Graph::dijkstra(int id)
 {
 	init_single_source(id);
@@ -90,6 +172,25 @@ void Graph::dijkstra(int id)
 		int id = Q.pop().getKey();
 		Vertex &t = vertices.at(id);
 		for (auto v : t.getAllAdj())
-			relax(t, *v.first, v.second);
+			dijkstraRelax(t, *v.first, v.second);
 	}
+}
+
+void Graph::strongly_connected_components()
+{
+	dfs();
+	transpoze();
+	std::cout << "\n\n\n\n\n\n\n";
+	dfs();
+}
+
+bool sortByWeight(const std::tuple<int, int, double>& a,
+	const std::tuple<int, int, double>& b)
+{
+	return (get<2>(a) < get<2>(b));
+}
+
+bool compareByF(const Vertex* a, const Vertex* b)
+{
+	return (a->getF() > b->getF());
 }
