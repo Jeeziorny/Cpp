@@ -1,0 +1,11 @@
+﻿  Graph.cpp
+e:\git\cpp\graphs\graphs\graph.cpp(35): warning C4101: 'temp': unreferenced local variable
+e:\git\cpp\graphs\graphs\priorityqueue.h(24): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=double
+          ]
+  e:\git\cpp\graphs\graphs\priorityqueue.h(91): note: while compiling class template member function 'PriorityQueue<double>::PriorityQueue(void)'
+  e:\git\cpp\graphs\graphs\graph.cpp(165): note: see reference to function template instantiation 'PriorityQueue<double>::PriorityQueue(void)' being compiled
+  e:\git\cpp\graphs\graphs\graph.cpp(165): note: see reference to class template instantiation 'PriorityQueue<double>' being compiled
+  Graphs.vcxproj -> E:\git\Cpp\Graphs\Debug\Graphs.exe

@@ -14,7 +14,6 @@ class Graph
 private:
 	vector<tuple<int, int, double>> Edges =
 		vector<tuple<int, int, double>>();
-
 	int time;
 protected:
 	vector<Vertex> vertices = vector<Vertex>();
